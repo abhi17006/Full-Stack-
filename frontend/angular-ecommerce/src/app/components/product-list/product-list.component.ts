@@ -11,8 +11,8 @@ import { ActivatedRoute } from '@angular/router';
 export class ProductListComponent implements OnInit {
 
   products: Product[] = [];
-
   currentCategoryId: number | undefined;
+  searchMode: boolean = false;
 
   //call ActivateRouter in the constructor
   constructor(private productService: ProductService,
@@ -29,7 +29,31 @@ export class ProductListComponent implements OnInit {
   }
 
   listProducts() {
-    //fetch data from Service Methods API
+    //access value that passed from Search URL
+    this.searchMode = this.route.snapshot.paramMap.has('keyword');
+    //if data keywaord is present
+    if(this.searchMode){
+      this.handleSearchProducts();
+    }else{
+      this.handleListProducts();
+    }
+   
+  }
+
+  handleSearchProducts() {
+    //using ! operator makes current field is assignable, and not null or undefined
+    const theKeyword: string = this.route.snapshot.paramMap.get('keyword')!;
+
+    //now search for products using keyword
+    this.productService.searchProducts(theKeyword).subscribe(
+      data =>{
+        this.products = data;
+      }
+    )
+  }
+
+  handleListProducts(){
+     //fetch data from Service Methods API
 
     //check if id parameter is available
     const hasCategoryId : boolean= this.route.snapshot.paramMap.has('id');
