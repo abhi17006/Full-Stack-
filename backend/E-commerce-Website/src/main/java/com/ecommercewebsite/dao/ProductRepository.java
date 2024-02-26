@@ -12,4 +12,5 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @CrossOrigin("http://localhost:4200") //to access REST APIs into Angular
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findByCategoryId(@Param("id") Long id, Pageable pageable);
+    Page<Product> findByNameContaining(@Param("name") String name, Pageable pageable);
 }
