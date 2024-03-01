@@ -103,7 +103,7 @@ export class ProductListComponent implements OnInit {
 
   //updatePage size method
   updatePageSize(pageSize: string) {
-    console.log(+pageSize);
+    //console.log(+pageSize);
     //convertt string into integer
     this.thePageSize = +pageSize;
     this.thePageNumber = 1;

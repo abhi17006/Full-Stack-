@@ -37,6 +37,8 @@
                                 <ngb-pagination [(page)]="thePageNumber"
                                                 [pageSize]="thePageSize"
                                                 [collectionSize]="theTotalElements"
+                                                [maxSize]="5"
+                                                [boundaryLinks]="true"
                                                 (pageChange)="listProducts()"
                                                 >
 
@@ -48,6 +50,7 @@
                                 
                                 <!-- reference valriable to access its value: 5,10,15 -->
                                 <select #myPageSelect (change)="updatePageSize(myPageSelect.value)">
+                                    <option>3</option>
                                     <option selected="true">5</option>
                                     <option>10</option>
                                     <option>20</option>
