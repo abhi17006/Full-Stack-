@@ -11,8 +11,14 @@ import { ActivatedRoute } from '@angular/router';
 export class ProductListComponent implements OnInit {
 
   products: Product[] = [];
-  currentCategoryId: number | undefined;
+  currentCategoryId: number = 1;
+  previousCategoryId: number = 1;
   searchMode: boolean = false;
+
+  //properties for pagination
+  thePageNumber: number = 1;
+  thePageSize: number = 5;
+  theTotalElements: number = 0;
 
   //call ActivateRouter in the constructor
   constructor(private productService: ProductService,
@@ -67,10 +73,30 @@ export class ProductListComponent implements OnInit {
       this.currentCategoryId=1;
     }
 
-    //get the products for the given category id
-    this.productService.getProductList(this.currentCategoryId).subscribe(
+    //check if have a different category tan previous
+
+    //
+    //if we have a differnt category id than previous
+    //then set thePageNumber back to 1
+    if(this.previousCategoryId != this.currentCategoryId){
+      this.thePageNumber=1;
+    }
+
+    this.previousCategoryId = this.currentCategoryId;
+    console.log(`currentCategoryId=${this.currentCategoryId}, thePageNumber=${this.thePageNumber}`)
+
+
+    //get the products for the given category id, angular pagination starts with 1, Spring DATA REST starts 0
+    this.productService.getProductListPaginate(this.thePageNumber - 1, 
+                                              this.thePageSize,
+                                              this.currentCategoryId).subscribe(
       data =>{
-        this.products = data;
+        //left-side of assignment properties are defined in the class
+        //right-side data from Spring Data REST JSON
+        this.products = data._embedded.products;
+        this.thePageNumber = data.page.number + 1;
+        this.thePageSize = data.page.size;
+        this.theTotalElements = data.page.totalElements;
     });
   }
 }

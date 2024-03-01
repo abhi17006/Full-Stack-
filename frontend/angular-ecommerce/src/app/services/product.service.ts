@@ -13,6 +13,15 @@ export class ProductService {
   private categoryUrl = "http://localhost:8080/api/product-category";
   constructor(private httpClient: HttpClient) { }
 
+
+  //method for get products page size and number
+  getProductListPaginate(thePage: number, thePageSize: number, categoryId: number) : Observable<GetResponseProducts>{
+    //url based on categoryId, page and size
+    const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`
+                      + `&page=${thePage}&size=${thePageSize}`;
+
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
+  }
   //method for get products
   getProductList(categoryId: number) : Observable<Product[]>{
     //url based on categoryId
@@ -55,6 +64,13 @@ interface GetResponseProducts{
   // unwraps the JSON from Spring Data REST _embedded entry
   _embedded:{
     products: Product[];
+  },
+//metadata for pagination
+  page: {
+    size: number,
+    totalElements: number,
+    totalPages: number,
+    number: number
   }
 }
 
