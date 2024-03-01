@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ProductListComponent implements OnInit {
 
+
   products: Product[] = [];
   currentCategoryId: number = 1;
   previousCategoryId: number = 1;
@@ -99,4 +100,13 @@ export class ProductListComponent implements OnInit {
         this.theTotalElements = data.page.totalElements;
     });
   }
+
+  //updatePage size method
+  updatePageSize(pageSize: string) {
+    console.log(+pageSize);
+    //convertt string into integer
+    this.thePageSize = +pageSize;
+    this.thePageNumber = 1;
+    this.listProducts();//refresh page based on new pageSize
+    }
 }
