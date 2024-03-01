@@ -13,6 +13,7 @@ export class ProductService {
   private categoryUrl = "http://localhost:8080/api/product-category";
   constructor(private httpClient: HttpClient) { }
 
+  //pagination methods
 
   //method for get products page size and number
   getProductListPaginate(thePage: number, thePageSize: number, categoryId: number) : Observable<GetResponseProducts>{
@@ -22,6 +23,18 @@ export class ProductService {
 
     return this.httpClient.get<GetResponseProducts>(searchUrl);
   }
+
+  //method for search products based on keyword
+  searchProductsPaginate(thePage: number, 
+                        thePageSize: number, 
+                        theKeyword: string) : Observable<GetResponseProducts>{
+    //url based on categoryId, page and size
+    const searchUrl = `${this.baseUrl}/search/findByNameContaining?name=${theKeyword}`
+                      + `&page=${thePage}&size=${thePageSize}`;
+
+    return this.httpClient.get<GetResponseProducts>(searchUrl);
+  }
+
   //method for get products
   getProductList(categoryId: number) : Observable<Product[]>{
     //url based on categoryId

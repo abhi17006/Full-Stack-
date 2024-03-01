@@ -21,6 +21,8 @@ export class ProductListComponent implements OnInit {
   thePageSize: number = 5;
   theTotalElements: number = 0;
 
+  previousKeyword: string= "";
+
   //call ActivateRouter in the constructor
   constructor(private productService: ProductService,
               private route: ActivatedRoute) {}
@@ -51,12 +53,19 @@ export class ProductListComponent implements OnInit {
     //using ! operator makes current field is assignable, and not null or undefined
     const theKeyword: string = this.route.snapshot.paramMap.get('keyword')!;
 
+    //if we have a different keyword than previous
+    //then set thePageNymber to 1
+
+    if(this.previousKeyword != theKeyword){
+      this.thePageNumber = 1;
+    }
+
+    this.previousKeyword = theKeyword;
+
     //now search for products using keyword
-    this.productService.searchProducts(theKeyword).subscribe(
-      data =>{
-        this.products = data;
-      }
-    )
+    this.productService.searchProductsPaginate(this.thePageNumber-1,
+                                              this.thePageSize,
+                                              theKeyword).subscribe(this.processResult());
   }
 
   handleListProducts(){
@@ -74,7 +83,7 @@ export class ProductListComponent implements OnInit {
       this.currentCategoryId=1;
     }
 
-    //check if have a different category tan previous
+    //check if have a different category than previous
 
     //
     //if we have a differnt category id than previous
@@ -90,15 +99,7 @@ export class ProductListComponent implements OnInit {
     //get the products for the given category id, angular pagination starts with 1, Spring DATA REST starts 0
     this.productService.getProductListPaginate(this.thePageNumber - 1, 
                                               this.thePageSize,
-                                              this.currentCategoryId).subscribe(
-      data =>{
-        //left-side of assignment properties are defined in the class
-        //right-side data from Spring Data REST JSON
-        this.products = data._embedded.products;
-        this.thePageNumber = data.page.number + 1;
-        this.thePageSize = data.page.size;
-        this.theTotalElements = data.page.totalElements;
-    });
+                                              this.currentCategoryId).subscribe(this.processResult());
   }
 
   //updatePage size method
@@ -108,5 +109,18 @@ export class ProductListComponent implements OnInit {
     this.thePageSize = +pageSize;
     this.thePageNumber = 1;
     this.listProducts();//refresh page based on new pageSize
+    }
+
+
+    //accessing REST Data Page properties
+    processResult(){
+      return (data: any) =>{
+        //left-side of assignment properties are defined in the class
+        //right-side data from Spring Data REST JSON
+        this.products = data._embedded.products;
+        this.thePageNumber = data.page.number +1;
+        this.thePageSize = data.page.size;
+        this.theTotalElements = data.page.totalElements;
+      };
     }
 }
