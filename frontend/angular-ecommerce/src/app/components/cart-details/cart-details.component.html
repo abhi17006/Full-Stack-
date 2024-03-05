@@ -21,10 +21,32 @@
                         </td>
                         <td>
                             <div class="items">
-                                <label>Quantity:</label> {{currItem.quanity}}
-                            </div>
+                                <label>Quantity:</label>
+                                <!-- add increment quantity code -->
+                                
+                                <div class="row no-gutters">
+                                    <!-- for plus button -->
+                                    <div class="col">
+                                        <button (click)="incrementQty(currItem)" class="btn btn-primary btn-sm">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col ml-4 mr-2">
+                                        {{currItem.quanity}}
+                                    </div>
+                                    <div class="col">
+                                        <!-- for minus button -->
+                                        <button (click)="decrementQty(currItem)" class="btn btn-dark btn-sm">
+                                            <i class="fa-solid fa-minus"></i>
+                                        </button>
+                                    </div>
 
+                                    <div class="col-8"></div>
+                                </div>
+                            </div>
+                            <button (click)="removeItem(currItem)" class="btn btn-primary btn-sm">Remove</button>
                             <p class="mt-2">Subtotal: {{currItem.quanity * currItem.unitPrice |currency: 'USD'}} </p>
+                            
                         </td>
                     </tr>
 

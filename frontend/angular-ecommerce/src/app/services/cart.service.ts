@@ -68,4 +68,30 @@ export class CartService {
     console.log(`totalPrice: ${totalPriceValue.toFixed(2)}, totalQuantiry: ${totalQuantityValue}`);
     console.log('---------')
   }
+
+  decrementItemCartQty(theCartItem: CartItem){
+    //decrement quantity
+    theCartItem.quanity--;
+
+    //check item is 0 or not
+    if(theCartItem.quanity === 0){
+      this.remove(theCartItem); //call remove method
+    }else{
+      this.computeCartTotals();
+    }
+  }
+  //remove method
+  remove(theCartItem: CartItem) {
+    //get index of item in the array
+    const itemIndex = this.cartItems.findIndex(tempCartItem => tempCartItem.id === theCartItem.id);
+
+    //if found, remove the item from the array at the given index
+    if(itemIndex > -1){
+      this.cartItems.splice(itemIndex,1);//remove item 1 from curr index
+
+      this.computeCartTotals();
+    }
+  }
+
+  
 }
