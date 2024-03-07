@@ -57,6 +57,9 @@
                             <p>Total Quantity: {{totalQuantity}} </p>
                             <p>Shipping: Free</p>
                             <p>Total Price: {{totalPrice | currency: 'USD'}} </p>
+                            <div class="d-md-flex justify-content-md-end">
+                                <a routerLink="/checkout" class="btn btn-primary btn-sm" style="margin-right: 20;"> Checkout </a>
+                            </div>
                         </td>
                     </tr>
                 </table>
