@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { every } from 'rxjs';
 import { FormDataService } from '../../services/form-data.service';
 import { Country } from '../../common/country';
 import { State } from '../../common/state';
+import { CustomValidators } from '../../validators/custom-validators';
 
 @Component({
   selector: 'app-checkout',
@@ -33,32 +34,66 @@ export class CheckoutComponent implements OnInit {
   ngOnInit(): void {
     this.checkoutFromGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
-        firstName: [''],
-        lastName: [''],
-        email: ['']
+        //validation for each field, add custom validators
+        firstName: ['', [Validators.required, 
+                          Validators.minLength(2), 
+                          CustomValidators.notOnlyWhitespace]
+                    ],
+
+        lastName: ['', [Validators.required, 
+                        Validators.minLength(2), 
+                        CustomValidators.notOnlyWhitespace]
+                  ],
+
+        email: ['', [Validators.required, 
+                      Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
+                      CustomValidators.notOnlyWhitespace]
+                ]
       }),
 
       shippingAddress: this.formBuilder.group({
-        street: [''],
-        city: [''],
-        state: [''],
-        zipcode: [''],
-        country: [''],
+        street: ['', [Validators.required, 
+                      Validators.minLength(2), 
+                      CustomValidators.notOnlyWhitespace]
+                ],
+        city: ['', [Validators.required, 
+                    Validators.minLength(2), 
+                    CustomValidators.notOnlyWhitespace]
+              ],
+        state: ['', [Validators.required] ],
+        zipcode: ['', [Validators.required, 
+                      Validators.minLength(2), 
+                      CustomValidators.notOnlyWhitespace]
+                  ],
+        country: ['', [Validators.required] ]
       }),
 
       billingAddress: this.formBuilder.group({
-        street: [''],
-        city: [''],
-        state: [''],
-        zipcode: [''],
-        country: [''],
+        street: ['', [Validators.required, 
+                  Validators.minLength(2), 
+                  CustomValidators.notOnlyWhitespace]
+            ],
+        city: ['', [Validators.required, 
+                    Validators.minLength(2), 
+                    CustomValidators.notOnlyWhitespace]
+              ],
+        state: ['', [Validators.required] ],
+        zipcode: ['', [Validators.required, 
+                  Validators.minLength(2), 
+                  CustomValidators.notOnlyWhitespace]
+              ],
+        country: ['', [Validators.required] ]
       }),
 
       creditCard: this.formBuilder.group({
-        cardType: [''],
-        nameOnCard: [''],
-        cardNumber: [''],
-        securityCode: [''],
+        cardType: new FormControl('', [Validators.required]),
+        nameOnCard: ['', [Validators.required, 
+                          Validators.minLength(2), 
+                          CustomValidators.notOnlyWhitespace
+                        ]
+                    ],
+        cardNumber: ['', [Validators.required, Validators.pattern('[0-9]{16}')]], //only 16 digits
+        securityCode: ['', [Validators.required, Validators.pattern('[0-9]{3}')]], //only 3 digits
         exipreMonth: [''],
         exipreYear: ['']
       }),
@@ -93,11 +128,38 @@ export class CheckoutComponent implements OnInit {
 
   onSubmit(){
     console.log("values: ");
+
+    if(this.checkoutFromGroup.invalid){
+      this.checkoutFromGroup.markAllAsTouched();
+    }
     console.log(this.checkoutFromGroup.get('customer')?.value);
     console.log("The shipping address is " + this.checkoutFromGroup.get('shippingAddress')?.value.country.name);
     console.log("The shipping address is " + this.checkoutFromGroup.get('shippingAddress')?.value.state.name);
     
   }
+
+  //add validation methods
+  get firstName(){return this.checkoutFromGroup.get('customer.firstName');}
+  get lastName(){return this.checkoutFromGroup.get('customer.lastName');}
+  get email(){return this.checkoutFromGroup.get('customer.email');}
+
+  get shippingAddStreet(){return this.checkoutFromGroup.get('shippingAddress.street');}
+  get shippingAddCity(){return this.checkoutFromGroup.get('shippingAddress.city');}
+  get shippingAddState(){return this.checkoutFromGroup.get('shippingAddress.state');}
+  get shippingAddZipCode(){return this.checkoutFromGroup.get('shippingAddress.zipcode');}
+  get shippingAddCountry(){return this.checkoutFromGroup.get('shippingAddress.country');}
+
+  get billingAddStreet(){return this.checkoutFromGroup.get('billingAddress.street');}
+  get billingAddCity(){return this.checkoutFromGroup.get('billingAddress.city');}
+  get billingAddState(){return this.checkoutFromGroup.get('billingAddress.state');}
+  get billingAddZipCode(){return this.checkoutFromGroup.get('billingAddress.zipcode');}
+  get billingAddCountry(){return this.checkoutFromGroup.get('billingAddress.country');}
+
+  get creditCardType(){return this.checkoutFromGroup.get('creditCard.cardType');}
+  get creditCardNameOnCard(){return this.checkoutFromGroup.get('creditCard.nameOnCard');}
+  get creditCardNumber(){return this.checkoutFromGroup.get('creditCard.cardNumber');}
+  get creditCardSecurityCode(){return this.checkoutFromGroup.get('creditCard.securityCode');}
+  //get creditCardType(){return this.checkoutFromGroup.get('creditCard.cardType');}
 
   //checkBox method
   copyShippingAddToBillingAdd(event:any) {
