@@ -23,6 +23,8 @@ public class CheckoutServiceImpl implements CheckoutService {
         this.customerRepository = customerRepository;
     }
 
+
+
     @Override
     @Transactional
     //save order into DataBase
@@ -45,6 +47,16 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         //populate customer with order
         Customer customer = purchase.getCustomer();
+
+        //check id customer already exists
+        String theEMail = customer.getEmail();
+
+        //find current customer from customer Table
+        Customer customerFromDB = customerRepository.findByEmail(theEMail);
+        if(customerFromDB != null){
+            //found then assign
+            customer = customerFromDB;
+        }
         customer.add(order);
 
         //save toDB

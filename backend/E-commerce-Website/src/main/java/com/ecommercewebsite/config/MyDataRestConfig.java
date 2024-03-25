@@ -7,6 +7,7 @@ import com.ecommercewebsite.entity.State;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.metamodel.EntityType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
@@ -20,6 +21,10 @@ import java.util.Set;
 @Configuration
 public class MyDataRestConfig implements RepositoryRestConfigurer {
 
+    //allowed origins from property file
+    @Value("${allowed.origins}")
+    private String[] theAllowedOrigins;
+
     //JPA ENtity Manager
 
     @Autowired
@@ -32,7 +37,8 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
 
         //array of methods
-        HttpMethod[] theUnsupportedActions = {HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE};
+        HttpMethod[] theUnsupportedActions = {HttpMethod.PUT, HttpMethod.POST,
+                                            HttpMethod.DELETE, HttpMethod.PATCH};
 
         //disable HTTP methods for Products: put, post and Delete
         disableHttpMethods(Product.class,config, theUnsupportedActions);
@@ -47,6 +53,9 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         disableHttpMethods(State.class, config, theUnsupportedActions);
         //internal helper method
         exposeIds(config);
+
+        //configurer cors mapping for Spring Data Rest,now can remove form JPAREpository
+        cors.addMapping(config.getBasePath() + "/**").allowedOrigins(theAllowedOrigins);
     }
 
     //disable HTTP methods : put, post and Delete
