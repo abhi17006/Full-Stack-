@@ -21,7 +21,7 @@ export class LoginStatusComponent implements OnInit {
 
     this.isAuthenticatedV = await this.oktaAuth.isAuthenticated();
     if(this.isAuthenticatedV){
-      await this.getUserDetails();
+      await this.getUserDetails(); //get UserInfo from
     }
   }
 

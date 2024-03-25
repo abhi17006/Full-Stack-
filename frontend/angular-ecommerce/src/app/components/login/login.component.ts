@@ -34,11 +34,11 @@ export class LoginComponent implements OnInit {
   async ngOnInit() {
     this.oktaSignin.remove(); //remove previous signIn
     this.oktaSignin.showSignInToGetTokens({
-      el: '#okta-sign-in-widget',
+      el: '#okta-sign-in-widget', // el : ID same as HTML div ID
       scopes: myAppConfig.oidc.scopes
     }).then((tokens: Tokens) =>{
       
-      this.oktaAuth.handleLoginRedirect(tokens);
+      this.oktaAuth.handleLoginRedirect(tokens); //access tokens from Okta login and redirect to /url page
     }).catch((err: any) => {
       // Typically due to misconfiguration
       throw err;

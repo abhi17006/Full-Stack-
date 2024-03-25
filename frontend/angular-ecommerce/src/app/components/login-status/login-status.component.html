@@ -5,10 +5,13 @@
     </div>
 
     <!-- if not authenticated -->
+    <!-- access OktaStateService special keyword authState$  and isAuthenticated variable with Async  -->
     <button *ngIf="!(oktaAuthService.authState$ | async)?.isAuthenticated" routerLink="/login" class="security-btn">Login</button>
     <button *ngIf="(oktaAuthService.authState$ | async)?.isAuthenticated" (click)="logout()" class="security-btn">Logout</button>
 
-    <!-- <button *ngIf="!isAuthenticated" routerLink="/login" class="security-btn">Login</button>
+    <button *ngIf="(oktaAuthService.authState$ | async)?.isAuthenticated"  routerLink="/members" class="security-btn ml-1">Members</button>
 
-    <button *ngIf="isAuthenticated" (click)="logout()" class="security-btn">Logout</button> -->
+    <!-- <button routerLink="/members" >Profile</button> -->
+
+    
 </div>

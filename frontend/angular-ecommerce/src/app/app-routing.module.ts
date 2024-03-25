@@ -4,8 +4,9 @@ import { ProductListComponent } from './components/product-list/product-list.com
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
-import { OktaCallbackComponent } from '@okta/okta-angular';
+import { OktaAuthGuard, OktaCallbackComponent } from '@okta/okta-angular';
 import { LoginComponent } from './components/login/login.component';
+import { MembersPageComponent } from './components/members-page/members-page.component';
 
 
 
@@ -19,6 +20,7 @@ const routes: Routes = [
   {path: 'checkout', component: CheckoutComponent},
   {path: 'login/callback', component: OktaCallbackComponent}, //OktaCallBack component from Okta 
   {path: 'login', component: LoginComponent},
+  {path: 'members', component:MembersPageComponent, canActivate: [OktaAuthGuard]},
   {path: '', redirectTo: '/products', pathMatch:'full'},
   {path: '**', redirectTo:'/products', pathMatch: 'full'}
 ];
