@@ -1,9 +1,6 @@
 package com.ecommercewebsite.config;
 
-import com.ecommercewebsite.entity.Country;
-import com.ecommercewebsite.entity.Product;
-import com.ecommercewebsite.entity.ProductCategory;
-import com.ecommercewebsite.entity.State;
+import com.ecommercewebsite.entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.metamodel.EntityType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +37,7 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         HttpMethod[] theUnsupportedActions = {HttpMethod.PUT, HttpMethod.POST,
                                             HttpMethod.DELETE, HttpMethod.PATCH};
 
-        //disable HTTP methods for Products: put, post and Delete
+        //disable HTTP methods for Products: put, post and Delete, Patch
         disableHttpMethods(Product.class,config, theUnsupportedActions);
 
         //disable HTTP methods for ProductCategory: put, post and Delete
@@ -51,6 +48,10 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
 
         //disable HTTP methods for State: put, post and Delete
         disableHttpMethods(State.class, config, theUnsupportedActions);
+
+        //disable HTTP methods for Order: put, post and Delete
+        disableHttpMethods(Order.class, config, theUnsupportedActions);
+
         //internal helper method
         exposeIds(config);
 
