@@ -12,7 +12,31 @@ export class CartService {
   //use Subject to publish events in our code
   totalPrice: Subject<number> = new BehaviorSubject<number>(0); //changing subject to BehavioralSubject initial value =0
   totalQuantity: Subject<number> = new BehaviorSubject<number>(0);
-  constructor() { }
+
+  //assign session storage object
+  //storage: Storage = sessionStorage;
+  
+  //assign local storage object
+  storage: Storage = localStorage;
+
+  constructor() { 
+    //read data from storage
+    /*
+    read JSON string from cartItems and convert into Object
+    */
+    let data = JSON.parse(this.storage.getItem('cartItems')!);
+    if(data != null){
+      this.cartItems = data;
+
+      //compute totals based on the data that is read from storage
+      this.computeCartTotals();
+    }
+  }
+
+  persistCartItems(){
+    //set the item with 'cartItems' and value this.cartItems convert object into JSON string
+    this.storage.setItem('cartItems', JSON.stringify(this.cartItems));
+  }
 
   addToCart(theCartItem: CartItem){
 
@@ -63,6 +87,9 @@ export class CartService {
     //publish the new values ... all subscribers will receive the new data
     this.totalPrice.next(totalPriceValue);
     this.totalQuantity.next(totalQuantityValue);
+
+    //call persist method
+    this.persistCartItems();
 
     //debugging prupose
     console.log(`totalPrice: ${totalPriceValue.toFixed(2)}, totalQuantiry: ${totalQuantityValue}`);
