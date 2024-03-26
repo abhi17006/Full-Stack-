@@ -11,7 +11,7 @@
 
     <button *ngIf="(oktaAuthService.authState$ | async)?.isAuthenticated"  routerLink="/members" class="security-btn ml-1">Members</button>
 
-    <button *ngIf="(oktaAuthService.authState$ | async)?.isAuthenticated" routerLink="/members" >Orders</button>
+    <button *ngIf="(oktaAuthService.authState$ | async)?.isAuthenticated" routerLink="/order-history" class="security-btn ml-1" >Orders</button>
 
     
 </div>

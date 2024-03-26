@@ -36,6 +36,7 @@ import { LoginStatusComponent } from './components/login-status/login-status.com
 import { Router } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
 import { MembersPageComponent } from './components/members-page/members-page.component';
+import { OrderHistoryComponent } from './components/order-history/order-history.component';
 
 const appBaseHref = '/';
 
@@ -53,6 +54,7 @@ const appBaseHref = '/';
     LoginComponent,
     LoginStatusComponent,
     MembersPageComponent,
+    OrderHistoryComponent,
   ],
   imports: [
     BrowserModule,

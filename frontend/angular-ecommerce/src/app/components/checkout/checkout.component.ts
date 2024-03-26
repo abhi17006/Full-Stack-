@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { Order } from '../../common/order';
 import { OrderItem } from '../../common/order-item';
 import { Purchase } from '../../common/purchase';
+import { SessionAPI } from '@okta/okta-auth-js';
 
 @Component({
   selector: 'app-checkout',
@@ -33,6 +34,9 @@ export class CheckoutComponent implements OnInit {
   shippingAddressStates: State[] = [];
   billingAddressStates: State[] = [];
 
+  //set session storage
+  storage: Storage = sessionStorage;
+
   constructor(private formBuilder: FormBuilder,
               private formDataService: FormDataService,
               private cartService: CartService,
@@ -41,6 +45,8 @@ export class CheckoutComponent implements OnInit {
     ){}
 
   ngOnInit(): void {
+    //read the session storage email value
+    const theEmail = JSON.parse(this.storage.getItem('userEmail')!);
     this.checkoutFromGroup = this.formBuilder.group({
       customer: this.formBuilder.group({
         //validation for each field, add custom validators
@@ -53,8 +59,8 @@ export class CheckoutComponent implements OnInit {
                         Validators.minLength(2), 
                         CustomValidators.notOnlyWhitespace]
                   ],
-
-        email: ['', [Validators.required, 
+        //initail email value as loggedIn user' email
+        email: [theEmail, [Validators.required, 
                       Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
                       CustomValidators.notOnlyWhitespace]
                 ]
