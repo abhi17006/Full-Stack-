@@ -35,6 +35,7 @@ public class SecurityConfiguration {
 
         //not using cooking for session tracking disable csrf
         http.csrf(AbstractHttpConfigurer::disable);
+
         return http.build();
     }
 }
