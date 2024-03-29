@@ -23,7 +23,7 @@ import myAppConfig from './config/my-app-config';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ProductService } from './services/product.service';
 import { ProductCategoryMenuComponent } from './components/product-category-menu/product-category-menu.component';
 import { SearchComponent } from './components/search/search.component';
@@ -37,6 +37,7 @@ import { Router } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
 import { MembersPageComponent } from './components/members-page/members-page.component';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
+import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 const appBaseHref = '/';
 
@@ -79,7 +80,9 @@ const appBaseHref = '/';
           }
         }
       }
-    }
+    },
+    //
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi:true}
     // {provide: APP_BASE_HREF, useValue: {appBaseHref}}
   ],
   bootstrap: [AppComponent]
