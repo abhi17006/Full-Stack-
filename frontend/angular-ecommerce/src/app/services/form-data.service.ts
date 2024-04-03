@@ -3,14 +3,20 @@ import { Observable, map, of, retry } from 'rxjs';
 import { Country } from '../common/country';
 import { HttpClient } from '@angular/common/http';
 import { State } from '../common/state';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FormDataService {
 
-  private countriesUrl = 'http://localhost:8080/api/countries';
-  private statesUrl='http://localhost:8080/api/states';
+
+  //update with https url from enviroments
+  private countriesUrl = environment['luv2shopApiUrl'] + '/countries';
+  private statesUrl= environment['luv2shopApiUrl'] + '/states';
+
+  // private countriesUrl = 'http://localhost:8080/api/countries';
+  // private statesUrl='http://localhost:8080/api/states';
 
   constructor(private httpClient: HttpClient) { }
 
