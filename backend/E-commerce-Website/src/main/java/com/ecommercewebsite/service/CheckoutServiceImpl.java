@@ -1,17 +1,21 @@
 package com.ecommercewebsite.service;
 
 import com.ecommercewebsite.dao.CustomerRepository;
+import com.ecommercewebsite.dto.PaymentInfo;
 import com.ecommercewebsite.dto.Purchase;
 import com.ecommercewebsite.dto.PurchaseResponse;
 import com.ecommercewebsite.entity.Customer;
 import com.ecommercewebsite.entity.Order;
 import com.ecommercewebsite.entity.OrderItem;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CheckoutServiceImpl implements CheckoutService {
@@ -19,8 +23,12 @@ public class CheckoutServiceImpl implements CheckoutService {
     private CustomerRepository customerRepository;
 
     //@Autowired//use when we have multiple constructors
-    public CheckoutServiceImpl(CustomerRepository customerRepository) {
+    public CheckoutServiceImpl(CustomerRepository customerRepository,
+                               @Value("${stripe.secretKey}") String secretKey ) //import from application.properties
+    {
         this.customerRepository = customerRepository;
+        //initialize stripe api with secret key
+        Stripe.apiKey = secretKey;
     }
 
 
@@ -63,6 +71,27 @@ public class CheckoutServiceImpl implements CheckoutService {
         customerRepository.save(customer);
         //return a response
         return new PurchaseResponse(orderTrackingNumber);
+    }
+
+    //implement PaymentIntent method
+    @Override
+    public PaymentIntent createPaymentIntent(PaymentInfo paymentInfo) {
+
+        //method types list
+        List<String> paymentMethodTypes = new ArrayList<>();
+        paymentMethodTypes.add("card");
+
+        //map of amount, currency, methodtypes
+        Map<String, Object> params = new HashMap<>();
+        params.put("amount", paymentInfo.getAmount());
+        params.put("currency", paymentInfo.getCurrency());
+        params.put("payment_method_types", paymentMethodTypes);
+
+        try {
+            return PaymentIntent.create(params);
+        } catch (StripeException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String generateOrderTrackingNumber() {
